@@ -36,6 +36,25 @@ def compute_rebuilding_costs(network_to_repair_df):
 
 
 
+def compute_hospital_duration_for_rebuilding(network_to_repair_df):
+	hospital_df = network_to_repair_df[network_to_repair_df["type_batiment"] == "hôpital"]
+	infra_durations = []
+
+	for _, row in hospital_df.iterrows():
+		if row["type_infra"] == "aerien":
+			infra_durations.append(row["longueur"] * AERIAL_DURATION_PER_METER / MAX_WORKERS_PER_INFRA)
+		
+		elif row["type_infra"] == "semi-aerien":
+			infra_durations.append(row["longueur"] * SEMI_AERIAL_DURATION_PER_METER / MAX_WORKERS_PER_INFRA)
+		
+		elif row["type_infra"] == "fourreau":
+			infra_durations.append(row["longueur"] * DUCT_DURATION_PER_METER / MAX_WORKERS_PER_INFRA)
+
+	return max(infra_durations)
+
+
+
+
 if __name__ == "__main__":
 	network_df = pandas.read_excel("./data/reseau_en_arbre.xlsx")
 	building_df = pandas.read_csv("./data/batiments.csv")
@@ -47,4 +66,7 @@ if __name__ == "__main__":
 	print(network_to_repair_df)
 
 	total_cost = compute_rebuilding_costs(network_to_repair_df)
-	print(f"Le coût total des réparations est de : {total_cost}")
+	print(f"Le coût total des réparations est de : {total_cost:.2f} euros")
+
+	hospital_duration = compute_hospital_duration_for_rebuilding(network_to_repair_df)
+	print(f"Le durée pour remettre le courant à l'hôpital : {hospital_duration:.2f} h")
