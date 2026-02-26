@@ -1,5 +1,6 @@
 import pandas
 from config import *
+from plannification import run_plannification_algo
 
 
 def prepare_data(network_df, building_df, infra_df):
@@ -53,8 +54,6 @@ def compute_hospital_duration_for_rebuilding(network_to_repair_df):
 	return max(infra_durations)
 
 
-
-
 if __name__ == "__main__":
 	network_df = pandas.read_excel("./data/reseau_en_arbre.xlsx")
 	building_df = pandas.read_csv("./data/batiments.csv")
@@ -62,11 +61,14 @@ if __name__ == "__main__":
 
 	network_to_repair_df = prepare_data(network_df, building_df, infra_df)
 
-	print("Le réseau que l'on doit réparer :")
-	print(network_to_repair_df)
+	# print("Le réseau que l'on doit réparer :")
+	# print(network_to_repair_df)
 
 	total_cost = compute_rebuilding_costs(network_to_repair_df)
 	print(f"Le coût total des réparations est de : {total_cost:.2f} euros")
 
-	hospital_duration = compute_hospital_duration_for_rebuilding(network_to_repair_df)
-	print(f"Le durée pour remettre le courant à l'hôpital : {hospital_duration:.2f} h")
+	# hospital_duration = compute_hospital_duration_for_rebuilding(network_to_repair_df)
+	# print(f"Le durée pour remettre le courant à l'hôpital : {hospital_duration:.2f} h")
+
+	run_plannification_algo(network_to_repair_df, total_cost)
+
